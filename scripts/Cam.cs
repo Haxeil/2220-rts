@@ -28,16 +28,16 @@ public class Cam : Spatial
 		var vSize = GetViewport().Size;
 
 		var moveVec = Vector3.Zero;
-		if (mousePos.x < moveMargin) {
+		if (mousePos.x < moveMargin || Input.IsActionPressed("move_left")) {
 			moveVec.x -= 1;
 		}
-		if (mousePos.y < moveMargin) {
+		if (mousePos.y < moveMargin || Input.IsActionPressed("move_up")) {
 			moveVec.z -= 1;
 		}
-		if (mousePos.x > vSize.x - moveMargin) {
+		if (mousePos.x > vSize.x - moveMargin || Input.IsActionPressed("move_right")) {
 			moveVec.x += 1;
 		}
-		if (mousePos.y > vSize.x - moveMargin) {
+		if (mousePos.y > vSize.x - moveMargin || Input.IsActionPressed("move_down")) {
 			moveVec.z += 1;
 		}
 		moveVec = moveVec.Rotated(Vector3.Up, this.RotationDegrees.y);
