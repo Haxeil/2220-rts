@@ -1,10 +1,10 @@
 [gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://textures/Asphalt019_1K_Color.png" type="Texture" id=1]
-[ext_resource path="res://scenes/HumanSoldier.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/Cam/Cam.tscn" type="PackedScene" id=2]
 [ext_resource path="res://kloofendal_38d_partly_cloudy_2k.exr" type="Texture" id=3]
 [ext_resource path="res://scenes/Factory.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scripts/Cam.cs" type="Script" id=5]
+[ext_resource path="res://scenes/Units/HumanUnits/HumanSoldier.tscn" type="PackedScene" id=5]
 
 [sub_resource type="PanoramaSky" id=1]
 panorama = ExtResource( 3 )
@@ -88,14 +88,7 @@ data = PoolVector3Array( -60, 0.5, 60, 60, 0.5, 60, -60, -0.5, 60, 60, 0.5, 60, 
 
 [node name="World" type="Spatial"]
 
-[node name="Cam" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0 )
-script = ExtResource( 5 )
-rayLength = 2000
-
-[node name="Camera" type="Camera" parent="Cam"]
-transform = Transform( 1, 0, 0, 0, 0.995403, 0.0957763, 0, -0.0957763, 0.995403, 4.70252, -11.3031, 70.7549 )
-fov = 57.8
+[node name="Cam" parent="." instance=ExtResource( 2 )]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 2 )
@@ -123,22 +116,14 @@ transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 33.021, 1.06305, 43.6891
 [node name="Factory2" parent="Navigation/NavigationMeshInstance" instance=ExtResource( 4 )]
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -30.2491, 0.78877, 43.6891 )
 
-[node name="HumanSoldier" parent="Navigation" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -15.3258, 0.790682, 2.25145 )
-collision_layer = 3
+[node name="HumanSoldier" parent="Navigation" instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 3.6123, 0 )
 
-[node name="HumanSoldier2" parent="Navigation" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -17.7818, 0.790682, -9.20952 )
-collision_layer = 3
+[node name="HumanSoldier2" parent="Navigation" instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.463935, -28.9943 )
 
-[node name="HumanSoldier3" parent="Navigation" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -16.424, 0.790682, -2.87353 )
-collision_layer = 3
+[node name="HumanSoldier3" parent="Navigation" instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -30.9983, 0.463935, 0 )
 
-[node name="HumanSoldier4" parent="Navigation" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -14.2798, 0.790682, 7.13265 )
-collision_layer = 3
-
-[node name="HumanSoldier5" parent="Navigation" instance=ExtResource( 2 )]
-transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 4.62815, 0.790682, -2.02448 )
-collision_layer = 3
+[node name="HumanSoldier4" parent="Navigation" instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 24.5247, 0.463935, 0 )
