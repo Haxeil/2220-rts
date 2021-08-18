@@ -3,6 +3,21 @@ using System;
 
 public class HumanSoldier : KinematicBody
 {
+	private UnitGroup unit_group = null; // The group of the unit, null otherwise
+	public UnitGroup UnitGroup
+	{
+		get { return unit_group; }
+		set {
+			if (unit_group is UnitGroup) {
+				unit_group.UnregisterUnit(this);
+			}
+			if (value is UnitGroup) {
+				value.RegisterUnit(this);
+			}
+			unit_group = value;
+		}
+	}
+
 	[Export] private Vector3[] path;
 	private int pathIndx = 0;
 	[Export] private float speed = 12f;

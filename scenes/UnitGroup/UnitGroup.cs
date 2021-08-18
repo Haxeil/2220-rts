@@ -3,57 +3,60 @@ using System;
 
 public class UnitGroup : Spatial
 {
-	// How should this group be organized in the game?
-	public enum UnitGroupElement {
-		Box
-	}
+	const float Spacing = 2f;
 
-	[Export] public UnitGroupElement Element = UnitGroupElement.Box;
-	[Export] public float Spacing = 0.5f;
 	// It is relatively safe to assume that every unit derives from Spatial.
-	[Export] public Godot.Collections.Array<NodePath> Units;
+	private Godot.Collections.Array<HumanSoldier> units;
 
 	private Navigation nav;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		units = new Godot.Collections.Array<HumanSoldier>();
 		nav = GetParent<Navigation>();
 
 		UpdateUnitPaths();
 	}
 
-	// Tell the UnitGroup about a new unit joining the group, to allocate them
-	// a spot.
-	public void RegisterUnit(NodePath path) {
-		Units.Add(path);
+	// This function will be called by Unit.UnitGroup Property.
+	public void RegisterUnit(HumanSoldier unit) {
+		units.Add(unit);
 	}
 
-	// Tell the UnitGroup that a unit left the group.
-	public void UnregisterUnit(NodePath path) {
-		Units.Remove(path);
+	// This function will be called by Unit.UnitGroup Property.
+	public void UnregisterUnit(HumanSoldier unit) {
+		units.Remove(unit);
+		if (units.Count <= 0) QueueFree(); // Delete self when not the owner of any units
 	}
 
 	// Based upon the current position of the UnitGroup node and its element type,
 	// update all of the registered nodes to move to their correct positions.
 	public void UpdateUnitPaths() {
-		// Imagine distributing just points around the position of this node
-		// based on the element type. Then after you've distributed those points,
-		// get the closest position on the navmesh to each of those, and tell
-		// each unit to move there.
-		if (Units.Count > 0) {
-			Vector3[] positions = new Vector3[Units.Count];
-			switch (Element) {
-				case UnitGroupElement.Box:
-					int width = Units.Count / 2; // width = (width*height) / 2
-					Vector3 box_origin = new Vector3(-width - Spacing, Transform.origin.y, -width - Spacing);
-					for (int row = 0; row < width; ++row) {
-						for (int col = 0; col < width; ++col) {
-							int idx = row * col; // NOTE: this is not going to work. my brain hurts at midnight and I can't do math. Make the box!
-							//positions[v].x = box_origin 
-						}
-					}
-					break;
+		// Imagine distributing just points around the position of this node.
+		// Then after you've distributed those points, get the closest position
+		// on the navmesh to each of those, and tell each unit to move there.
+		if (units.Count > 0) {
+			GD.Print(units.Count);
+
+			//Vector3[] positions = new Vector3[units.Count];
+			int width = (units.Count / 2) + 1; // width = (width*height) / 2
+			float half_width = width * .5f;
+			Vector3 origin = new Vector3(
+					Transform.origin.x - half_width - (Spacing*half_width),
+					Transform.origin.y,
+					Transform.origin.z - half_width - (Spacing*half_width));
+
+			for (int row = 0; row < width; ++row) {
+				for (int col = 0; col < width; ++col) {
+					int idx = (row * width) + col;
+					if (idx >= units.Count) return;
+					units[idx].MoveTo(new Vector3(
+							origin.x + col*(width+Spacing),
+							origin.y,
+							origin.z + row*(width+Spacing)));
+					GD.Print("setting value");
+				}
 			}
 		}
 	}

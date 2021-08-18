@@ -12,10 +12,13 @@ public class Cam : Spatial
 	private Godot.Collections.Array<HumanSoldier> SelectedUnits = new Godot.Collections.Array<HumanSoldier>();
 	private SelectionBox selectionBox;
 	private Vector2 startSelPos;
+	private PackedScene unit_group;
+
 	public override void _Ready()
 	{
 		camera = GetChild<Camera>(0);
 		selectionBox = GetNode<SelectionBox>("SelectionBox");
+		unit_group = ResourceLoader.Load<PackedScene>("res://scenes/UnitGroup/UnitGroup.tscn");
 	}
 
 	public override void _Process(float delta) {
@@ -69,9 +72,21 @@ public class Cam : Spatial
 			return;
 		}
 		if (result["position"] is Vector3 position) {
-			for (int indx = 0; indx < SelectedUnits.Count; indx++) {
-				SelectedUnits[indx].MoveTo(position);
-				
+			if (SelectedUnits.Count > 0) {
+				if (SelectedUnits.Count > 1) {
+					// If more than one units selected are told to move,
+					// we create a UnitGroup and add them to it.
+					UnitGroup ug = unit_group.Instance<UnitGroup>();
+					GetTree().Root.GetNode("World/Navigation").AddChild(ug, true);
+					ug.Translation = position;
+
+					foreach (var unit in SelectedUnits) {
+						unit.UnitGroup = ug; // Setter of property calls RegisterUnit method of ug
+					}
+					ug.UpdateUnitPaths();
+				} else {
+					SelectedUnits[0].MoveTo(position);
+				}
 			}
 		}
 	}
