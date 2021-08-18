@@ -7,13 +7,13 @@ public class HumanSoldier : KinematicBody
 	private int pathIndx = 0;
 	[Export] private float speed = 12f;
 	private Navigation nav;
-	private Spatial body;
+	private Spatial character;
 
 	[Export] private float angular_velocity = 7f;
 	public override void _Ready()
 	{
 		nav = GetParent<Navigation>();
-		body = GetNode<Spatial>("Body");
+		character = GetNode<Spatial>("AnimatedCharacter");
 		
 	}
 
@@ -40,7 +40,7 @@ public class HumanSoldier : KinematicBody
 				
 				var velocity = this.MoveAndSlide(direction.Normalized() * speed, Vector3.Up, false, 4, Mathf.Pi/4, false);
 
-				GetNode<AnimationPlayer>("Animation").Play("Walking");
+				character.GetNode<AnimationPlayer>("AnimationPlayer").Play("Walking");
 				// change in y angle 
 				var deltaYAngle = Mathf.LerpAngle(Rotation.y, Mathf.Atan2(velocity.x, velocity.z), delta * angular_velocity);
 
