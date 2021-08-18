@@ -7,11 +7,11 @@
 radius = 150.318
 height = 732.808
 
-[sub_resource type="SpatialMaterial" id=6]
+[sub_resource type="SpatialMaterial" id=2]
 albedo_color = Color( 0.478431, 1, 0, 0.309804 )
 
-[sub_resource type="CylinderMesh" id=7]
-material = SubResource( 6 )
+[sub_resource type="CylinderMesh" id=3]
+material = SubResource( 2 )
 
 [node name="HumanSoldier" type="KinematicBody" groups=[
 "HumanSoldier",
@@ -30,5 +30,5 @@ shape = SubResource( 1 )
 [node name="Selected" type="MeshInstance" parent="."]
 transform = Transform( 2.87343, 0, 0, 0, 0.0148339, 0, 0, 0, 3.30632, 0, 0.163334, 0 )
 visible = false
-mesh = SubResource( 7 )
+mesh = SubResource( 3 )
 material/0 = null
