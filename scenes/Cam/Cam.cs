@@ -131,15 +131,14 @@ public class Cam : Spatial
 		var rect = new Rect2(topLeft, botRight - topLeft);
 		Godot.Collections.Array<HumanSoldier> SelectedUnits = new Godot.Collections.Array<HumanSoldier>{};
 
-		var list = GetTree().GetNodesInGroup("HumanSoldier");
-		for (int indx = 0; indx < GetTree().GetNodesInGroup("HumanSoldier").Count; indx++) {
-			var soldier = GetTree().GetNodesInGroup("HumanSoldier")[indx] as HumanSoldier;
-			if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
-				SelectedUnits.Add(soldier);
-			}
-			
-				
-		}
+        var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
+        for (int indx = 0; indx < soldier_list.Count; indx++) {
+            var soldier = soldier_list[indx] as HumanSoldier;
+            if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
+                SelectedUnits.Add(soldier);
+            }
+                
+        }
 
 		return SelectedUnits;
 	}
