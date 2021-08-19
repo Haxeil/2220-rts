@@ -37,10 +37,7 @@ public class UnitGroup : Spatial
 		// Then after you've distributed those points, get the closest position
 		// on the navmesh to each of those, and tell each unit to move there.
 		if (units.Count > 0) {
-			GD.Print(units.Count);
-
-			//Vector3[] positions = new Vector3[units.Count];
-			int width = (units.Count / 2) + 1; // width = (width*height) / 2
+			int width = Math.Max(2, units.Count / 2); // width = (width*height) / 2
 			float half_width = width * .5f;
 			Vector3 origin = new Vector3(
 					Transform.origin.x - half_width - (Spacing*half_width),
@@ -55,7 +52,6 @@ public class UnitGroup : Spatial
 							origin.x + col*(width+Spacing),
 							origin.y,
 							origin.z + row*(width+Spacing)));
-					GD.Print("setting value");
 				}
 			}
 		}
