@@ -13,12 +13,14 @@ public class Cam : Spatial
 	private SelectionBox selectionBox;
 	private Vector2 startSelPos;
 	private PackedScene unit_group;
+	private PackedScene positionArrowScene;
 
 	public override void _Ready()
 	{
 		camera = GetChild<Camera>(0);
 		selectionBox = GetNode<SelectionBox>("SelectionBox");
 		unit_group = ResourceLoader.Load<PackedScene>("res://scenes/UnitGroup/UnitGroup.tscn");
+		positionArrowScene = ResourceLoader.Load<PackedScene>("res://scenes/Cam/PositionArrows.tscn");
 	}
 
 	public override void _Process(float delta) {
@@ -79,13 +81,14 @@ public class Cam : Spatial
 					UnitGroup ug = unit_group.Instance<UnitGroup>();
 					GetTree().Root.GetNode("World/Navigation").AddChild(ug, true);
 					ug.Translation = position;
-
+					PointToDirection(position);
 					foreach (var unit in SelectedUnits) {
 						unit.UnitGroup = ug; // Setter of property calls RegisterUnit method of ug
 					}
 					ug.UpdateUnitPaths();
 				} else {
 					SelectedUnits[0].MoveTo(position);
+					PointToDirection(position);
 				}
 			}
 		}
@@ -146,14 +149,14 @@ public class Cam : Spatial
 		var rect = new Rect2(topLeft, botRight - topLeft);
 		Godot.Collections.Array<HumanSoldier> SelectedUnits = new Godot.Collections.Array<HumanSoldier>{};
 
-        var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
-        for (int indx = 0; indx < soldier_list.Count; indx++) {
-            var soldier = soldier_list[indx] as HumanSoldier;
-            if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
-                SelectedUnits.Add(soldier);
-            }
-                
-        }
+		var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
+		for (int indx = 0; indx < soldier_list.Count; indx++) {
+			var soldier = soldier_list[indx] as HumanSoldier;
+			if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
+				SelectedUnits.Add(soldier);
+			}
+				
+		}
 
 		return SelectedUnits;
 	}
@@ -166,5 +169,11 @@ public class Cam : Spatial
 
 		var spaceState = GetWorld().DirectSpaceState;
 		return spaceState.IntersectRay(rayStart, rayEnd, new Godot.Collections.Array {}, collisionMask);
+	}
+
+	private void PointToDirection(Vector3 position) {
+		var positionArrow = positionArrowScene.Instance<Spatial>();
+		this.GetParent().AddChild(positionArrow);
+		positionArrow.GlobalTranslate(new Vector3(position.x, 0, position.z));
 	}
 }

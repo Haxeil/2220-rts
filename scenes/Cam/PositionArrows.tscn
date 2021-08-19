@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scenes/UnitGroup/Material.material" type="Material" id=1]
-[ext_resource path="res://scenes/UnitGroup/PositionArrows.glb" type="PackedScene" id=2]
+[ext_resource path="res://models/Material.material" type="Material" id=1]
+[ext_resource path="res://models/PositionArrows.glb" type="PackedScene" id=2]
 
 [sub_resource type="Animation" id=1]
 resource_name = "Point"
@@ -102,9 +102,23 @@ tracks/7/keys = {
 "update": 1,
 "values": [ true, false ]
 }
+tracks/8/type = "method"
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0.8 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "queue_free"
+} ]
+}
 
 [node name="PositionArrows" instance=ExtResource( 2 )]
-transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0 )
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0.5, 0 )
 
 [node name="Cube" parent="." index="0"]
 transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, 4.29072, 2.72118, -0.0550446 )
