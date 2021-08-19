@@ -1,0 +1,126 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scenes/UnitGroup/Material.material" type="Material" id=1]
+[ext_resource path="res://scenes/UnitGroup/PositionArrows.glb" type="PackedScene" id=2]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Point"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath("Cube:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, -120 ), Vector3( 0, 0, 50 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Cube001:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 120 ), Vector3( 0, 0, -50 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Cube002:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -120, 0, 0 ), Vector3( 50, 0, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Cube:translation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 4.29072, 2.72118, -0.0550446 ), Vector3( 4.29072, 2.26332, -0.0550446 ) ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Cube001:translation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( -4.23475, 2.72118, -0.0550447 ), Vector3( -4.23475, 2.26332, -0.0550447 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Cube002:translation")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0.0384025, 2.72118, -4.35602 ), Vector3( 0.0384025, 2.26332, -4.35602 ) ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("Cube003:scale")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0, 0.4, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 1, 1, 1 ), Vector3( 2, 2, 2 ), Vector3( 0.5, 0.5, 0.5 ) ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath(".:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[node name="PositionArrows" instance=ExtResource( 2 )]
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0 )
+
+[node name="Cube" parent="." index="0"]
+transform = Transform( -0.5, 0.866025, 0, -0.866025, -0.5, 0, 0, 0, 1, 4.29072, 2.72118, -0.0550446 )
+material/0 = ExtResource( 1 )
+
+[node name="Cube001" parent="." index="1"]
+transform = Transform( -0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, -4.23475, 2.72118, -0.0550447 )
+material/0 = ExtResource( 1 )
+
+[node name="Cube002" parent="." index="2"]
+transform = Transform( 1, 0, 0, 0, -0.5, 0.866025, 0, -0.866025, -0.5, 0.0384025, 2.72118, -4.35602 )
+material/0 = ExtResource( 1 )
+
+[node name="Cube003" parent="." index="3"]
+material/0 = ExtResource( 1 )
+
+[node name="Anim" type="AnimationPlayer" parent="." index="4"]
+autoplay = "Point"
+anims/Point = SubResource( 1 )
