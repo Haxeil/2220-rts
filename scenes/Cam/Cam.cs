@@ -75,20 +75,21 @@ public class Cam : Spatial
 		}
 		if (result["position"] is Vector3 position) {
 			if (SelectedUnits.Count > 0) {
+				PointToDirection(position);
 				if (SelectedUnits.Count > 1) {
 					// If more than one units selected are told to move,
 					// we create a UnitGroup and add them to it.
 					UnitGroup ug = unit_group.Instance<UnitGroup>();
 					GetTree().Root.GetNode("World/Navigation").AddChild(ug, true);
 					ug.Translation = position;
-					PointToDirection(position);
+
 					foreach (var unit in SelectedUnits) {
 						unit.UnitGroup = ug; // Setter of property calls RegisterUnit method of ug
 					}
 					ug.UpdateUnitPaths();
 				} else {
 					SelectedUnits[0].MoveTo(position);
-					PointToDirection(position);
+					
 				}
 			}
 		}
