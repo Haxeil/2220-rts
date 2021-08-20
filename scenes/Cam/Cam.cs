@@ -3,6 +3,8 @@ using System;
 
 public class Cam : Spatial
 {
+	[Export] private Unit.Faction controlling_faction = Unit.Faction.Human;
+
 	[Export] private int moveMargin = 20;
 	[Export] private int moveSpeed = 30;
 
@@ -150,11 +152,17 @@ public class Cam : Spatial
 		var rect = new Rect2(topLeft, botRight - topLeft);
 		Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
 
-        	var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
-        	for (int indx = 0; indx < soldier_list.Count; indx++) {
-            		var soldier = soldier_list[indx] as Unit;
-            		if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
-				SelectedUnits.Add(soldier);
+        	var unit_list = GetTree().GetNodesInGroup("Unit");
+        	foreach (var node in unit_list) {
+            		//var soldier = soldier_list[indx] as Unit;
+			if (node is Unit unit) {
+				if (unit._Faction == controlling_faction) {
+            				if (rect.HasPoint(camera.UnprojectPosition(unit.GlobalTransform.origin))) {
+						SelectedUnits.Add(unit);
+					}
+				}
+			} else {
+				GD.PushWarning($"node {node.ToString()} is not of type Unit or is null");
 			}
 		}
 
