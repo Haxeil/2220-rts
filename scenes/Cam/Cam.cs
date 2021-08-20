@@ -9,7 +9,7 @@ public class Cam : Spatial
 	[Export] private int rayLength = 1000;
 
 	private Camera camera;
-	private Godot.Collections.Array<HumanSoldier> SelectedUnits = new Godot.Collections.Array<HumanSoldier>();
+	private Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
 	private SelectionBox selectionBox;
 	private Vector2 startSelPos;
 	private PackedScene unit_group;
@@ -92,7 +92,7 @@ public class Cam : Spatial
 	}
 
 	private void SelectUnits(Vector2 mousePos) {
-		var newSelectedUnits = new Godot.Collections.Array<HumanSoldier>{};
+		var newSelectedUnits = new Godot.Collections.Array<Unit>();
 		if (mousePos.DistanceSquaredTo(startSelPos) < 16) {
 			var u = GetUnitUnderMouse(mousePos);
 			if (u != null) {
@@ -117,19 +117,19 @@ public class Cam : Spatial
 		}
 	}
 
-	private HumanSoldier GetUnitUnderMouse(Vector2 mousePos) {
+	private Unit GetUnitUnderMouse(Vector2 mousePos) {
 		var result = RayCastFromMouse(mousePos, 3);
 		if (result == null) {
 			return null;
 		}
-		if (result["collider"] is HumanSoldier collider) {
+		if (result["collider"] is Unit collider) {
 			return collider;
 		} else {
 			return null;
 		}
 	}
 	//select units inside the Box
-	private Godot.Collections.Array<HumanSoldier> GetUnits(Vector2 topLeft, Vector2 botRight) {
+	private Godot.Collections.Array<Unit> GetUnits(Vector2 topLeft, Vector2 botRight) {
 
 		
 		if (topLeft.x > botRight.x) {
@@ -144,21 +144,18 @@ public class Cam : Spatial
 			botRight.y = temp;
 		}
 		var rect = new Rect2(topLeft, botRight - topLeft);
-		Godot.Collections.Array<HumanSoldier> SelectedUnits = new Godot.Collections.Array<HumanSoldier>{};
+		Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
 
-        var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
-        for (int indx = 0; indx < soldier_list.Count; indx++) {
-            var soldier = soldier_list[indx] as HumanSoldier;
-            if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
-                SelectedUnits.Add(soldier);
-            }
-                
-        }
+        	var soldier_list = GetTree().GetNodesInGroup("HumanSoldier");
+        	for (int indx = 0; indx < soldier_list.Count; indx++) {
+            		var soldier = soldier_list[indx] as Unit;
+            		if (rect.HasPoint(camera.UnprojectPosition(soldier.GlobalTransform.origin))) {
+				SelectedUnits.Add(soldier);
+			}
+		}
 
 		return SelectedUnits;
 	}
-
-
 
 	private Godot.Collections.Dictionary RayCastFromMouse(Vector2 mousePos, uint collisionMask) {
 		var rayStart = camera.ProjectRayOrigin(mousePos);

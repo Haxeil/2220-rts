@@ -6,26 +6,26 @@ public class UnitGroup : Spatial
 	const float Spacing = 2f;
 
 	// It is relatively safe to assume that every unit derives from Spatial.
-	private Godot.Collections.Array<HumanSoldier> units;
+	private Godot.Collections.Array<Unit> units;
 
 	private Navigation nav;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		units = new Godot.Collections.Array<HumanSoldier>();
+		units = new Godot.Collections.Array<Unit>();
 		nav = GetParent<Navigation>();
 
 		UpdateUnitPaths();
 	}
 
 	// This function will be called by Unit.UnitGroup Property.
-	public void RegisterUnit(HumanSoldier unit) {
+	public void RegisterUnit(Unit unit) {
 		units.Add(unit);
 	}
 
 	// This function will be called by Unit.UnitGroup Property.
-	public void UnregisterUnit(HumanSoldier unit) {
+	public void UnregisterUnit(Unit unit) {
 		units.Remove(unit);
 		if (units.Count <= 0) QueueFree(); // Delete self when not the owner of any units
 	}

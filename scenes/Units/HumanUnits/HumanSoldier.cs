@@ -1,40 +1,25 @@
 using Godot;
 using System;
 
-public class HumanSoldier : KinematicBody
+public class HumanSoldier : Unit
 {
-	private UnitGroup unit_group = null; // The group of the unit, null otherwise
-	public UnitGroup UnitGroup
-	{
-		get { return unit_group; }
-		set {
-			if (unit_group is UnitGroup) {
-				unit_group.UnregisterUnit(this);
-			}
-			if (value is UnitGroup) {
-				value.RegisterUnit(this);
-			}
-			unit_group = value;
-		}
-	}
-
 	[Export] private Vector3[] path;
 	private int pathIndx = 0;
 	[Export] private float speed = 12f;
-	private Navigation nav;
+	//private Navigation nav;
 	private Spatial character;
 
 	[Export] private float angular_velocity = 7f;
 	public override void _Ready()
 	{
-		nav = GetParent<Navigation>();
+		base._Ready(); // Call Unit._Ready() to get the Nav
 		character = GetNode<Spatial>("AnimatedCharacter");
 		
 	}
 
 	//called from Cam script 
-	public void MoveTo(Vector3 targetPos) {
-		path = nav.GetSimplePath(this.GlobalTransform.origin, targetPos);
+	public override void MoveTo(Vector3 targetPos) {
+		path = Nav.GetSimplePath(this.GlobalTransform.origin, targetPos);
 		pathIndx = 0;
 	}
 
@@ -67,11 +52,11 @@ public class HumanSoldier : KinematicBody
 	}
 
 
-	public void Select() {
+	public override void Select() {
 		GetNode<MeshInstance>("Selected").Show();
 	}
 
-	public void Deselect() {
+	public override void Deselect() {
 		GetNode<MeshInstance>("Selected").Hide();
 	}
 }
