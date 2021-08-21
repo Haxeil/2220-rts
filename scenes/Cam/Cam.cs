@@ -28,10 +28,11 @@ public class Cam : Spatial
 	public override void _Process(float delta) {
 		var mousePos = GetViewport().GetMousePosition();
 		CalcMove(mousePos, delta);
-
+		// Left Mouse btn 0.
 		if (Input.IsActionJustPressed("main_command")) {
 			MoveSelectedUnits(mousePos);
 		}
+		// Right Mouse btn 1.
 		if (Input.IsActionJustPressed("alt_command")) {
 			selectionBox.startBoxPoint = mousePos;
 			startSelPos = mousePos;
@@ -103,15 +104,16 @@ public class Cam : Spatial
 			var u = GetUnitUnderMouse(mousePos);
 			if (u != null) {
 				newSelectedUnits.Add(u);
+			} else {
+				DeselectSelected();
 			}
 		} else {
 			newSelectedUnits = GetUnits(startSelPos, mousePos);
 		}
 
 		if (newSelectedUnits.Count != 0) {
-			GD.Print("ne w selected", newSelectedUnits.Count);
+			GD.Print("new selected", newSelectedUnits.Count);
 			for (int indx = 0; indx < SelectedUnits.Count; indx++) {
-				GD.Print("selected : ", SelectedUnits.Count, "indx : ", indx);
 				SelectedUnits[indx].Deselect();
 			}
 			for (int indx = 0; indx < newSelectedUnits.Count; indx++) {
@@ -120,6 +122,8 @@ public class Cam : Spatial
 
 			SelectedUnits = newSelectedUnits;
 
+		} else {
+			DeselectSelected();
 		}
 	}
 
@@ -152,12 +156,12 @@ public class Cam : Spatial
 		var rect = new Rect2(topLeft, botRight - topLeft);
 		Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
 
-        	var unit_list = GetTree().GetNodesInGroup("Unit");
-        	foreach (var node in unit_list) {
-            		//var soldier = soldier_list[indx] as Unit;
+			var unit_list = GetTree().GetNodesInGroup("Unit");
+			foreach (var node in unit_list) {
+					//var soldier = soldier_list[indx] as Unit;
 			if (node is Unit unit) {
 				if (unit._Faction == controlling_faction) {
-            				if (rect.HasPoint(camera.UnprojectPosition(unit.GlobalTransform.origin))) {
+							if (rect.HasPoint(camera.UnprojectPosition(unit.GlobalTransform.origin))) {
 						SelectedUnits.Add(unit);
 					}
 				}
@@ -175,6 +179,16 @@ public class Cam : Spatial
 
 		var spaceState = GetWorld().DirectSpaceState;
 		return spaceState.IntersectRay(rayStart, rayEnd, new Godot.Collections.Array {}, collisionMask);
+	}
+	// Called when the player wants to deselect current selected units 
+	// when click on the ground or selecting empty area.
+	private void DeselectSelected() {
+		if (SelectedUnits.Count != 0) {
+			foreach (var unit in SelectedUnits) {
+				unit.Deselect();
+			}
+			SelectedUnits.Clear();
+		}
 	}
 
 	private void PointToDirection(Vector3 position) {
