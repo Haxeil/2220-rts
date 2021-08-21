@@ -32,3 +32,5 @@ transform = Transform( 2.87343, 0, 0, 0, 0.0148339, 0, 0, 0, 3.30632, 0, 0.16333
 visible = false
 mesh = SubResource( 3 )
 material/0 = null
+
+[connection signal="StateChanged" from="." to="." method="_On_UnitStateChanged"]
