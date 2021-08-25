@@ -16,7 +16,11 @@ public class MainPanel : Control
 		foreach (var uD in unitData) {
 			for (var idx = 0; idx < BoxSelection.GetChildCount(); idx++) {
 				var btn = BoxSelection.GetChild<Btn>(idx);
-				// when the btn has no data yet.
+				// if the unit already registered 
+				// break.
+				if (btn.unit == uD.Key) {
+					break;
+				}
 				if (btn.unit == Enums.Units.None) {
 					btn.unit = uD.Key;
 					btn.building = groupName;
