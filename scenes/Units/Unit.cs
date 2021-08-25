@@ -1,15 +1,12 @@
 using Godot;
 using System;
 
-public abstract class Unit : KinematicBody
+public abstract class Unit : KinematicBody, ISelectable
 {
-	public enum Faction {
-		Human,
-		Alien
-	}
+
 
 	// Determines who controls this unit, and who this unit chooses to engage.
-	[Export] public Faction _Faction;
+	[Export] public Enums.Faction _Faction;
 
 
 	private UnitGroup unit_group = null; // The group of the unit, null otherwise
@@ -59,6 +56,7 @@ public abstract class Unit : KinematicBody
 	protected abstract void PlayAnimation();
 
 	// Called when a unit state changes;
+
 	public void _On_UnitStateChanged(Enums.UnitState s)
 	{
 		// if the current gameplay state is DEAD dont change the state.
@@ -67,7 +65,7 @@ public abstract class Unit : KinematicBody
 
 		state.nextState = s; //IDLE // MOVE // ATTACK // DIE 
 
-		// dont change the prevState if the nextState = the currentState
+		// dont change the prevState if (the nextState = the currentState)
 		if (state.nextState != state.currentState)
 		{
 			state.prevState = state.currentState; 
