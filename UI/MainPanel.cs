@@ -24,6 +24,7 @@ public class MainPanel : Control
 					btn.TexturePressed = uD.Value[1];
 					btn.TextureHover = uD.Value[2];
 					btn.TextureDisabled = uD.Value[3];
+					break;
 				}
 			}
 		}
