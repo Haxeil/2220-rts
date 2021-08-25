@@ -3,7 +3,7 @@ using System;
 
 public class Cam : Spatial
 {
-	[Export] private Unit.Faction controlling_faction = Unit.Faction.Human;
+	[Export] private Enums.Faction controlling_faction = Enums.Faction.Human;
 
 	[Export] private int moveMargin = 20;
 	[Export] private int moveSpeed = 30;
@@ -11,7 +11,9 @@ public class Cam : Spatial
 	[Export] private int rayLength = 1000;
 
 	private Camera camera;
-	private Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
+	private Godot.Collections.Array<Unit> selectedUnits = new Godot.Collections.Array<Unit>();
+	
+	private Godot.Collections.Array<Building> selectedBuildings = new Godot.Collections.Array<Building>();
 	private SelectionBox selectionBox;
 	private Vector2 startSelPos;
 	private PackedScene unit_group;
@@ -46,7 +48,7 @@ public class Cam : Spatial
 		}
 
 		if (Input.IsActionJustReleased("alt_command")) {
-			SelectUnits(mousePos);
+			SelectObjs(mousePos);
 		}
 
 	}
@@ -72,74 +74,99 @@ public class Cam : Spatial
 
 
 	private void MoveSelectedUnits(Vector2 mousePos) {
+		GD.Print(selectedUnits);
 		var result = RayCastFromMouse(mousePos, 1);
 		if (result == null) {
 			return;
 		}
 		if (result["position"] is Vector3 position) {
-			if (SelectedUnits.Count > 0) {
+			if (selectedUnits.Count > 0) {
 				PointToDirection(position);
-				if (SelectedUnits.Count > 1) {
+				if (selectedUnits.Count > 1) {
 					// If more than one units selected are told to move,
 					// we create a UnitGroup and add them to it.
 					UnitGroup ug = unit_group.Instance<UnitGroup>();
 					GetTree().Root.GetNode("World/Navigation").AddChild(ug, true);
 					ug.Translation = position;
 
-					foreach (var unit in SelectedUnits) {
+					foreach (var unit in selectedUnits) {
 						unit.UnitGroup = ug; // Setter of property calls RegisterUnit method of ug
 					}
 					ug.UpdateUnitPaths();
+					
 				} else {
-					SelectedUnits[0].MoveTo(position);
+					selectedUnits[0].MoveTo(position);
 					
 				}
 			}
 		}
 	}
 
-	private void SelectUnits(Vector2 mousePos) {
+	private void SelectObjs(Vector2 mousePos) {
 		var newSelectedUnits = new Godot.Collections.Array<Unit>();
+		var newSelectedBuildings = new Godot.Collections.Array<Building>();
+
 		if (mousePos.DistanceSquaredTo(startSelPos) < 16) {
-			var u = GetUnitUnderMouse(mousePos);
+			var u = GetUnitObjMouse(mousePos);
+			
 			if (u != null) {
-				newSelectedUnits.Add(u);
+				if (u is Unit) {					
+					newSelectedUnits.Add(u as Unit);
+				} else {
+					newSelectedBuildings.Add(u as Building);
+				}
 			} else {
-				DeselectSelected();
+				DeselectSelectedUnits();
+				DeselectSelectedBuildings();
 			}
 		} else {
-			newSelectedUnits = GetUnits(startSelPos, mousePos);
+			(newSelectedUnits, newSelectedBuildings) = GetObjs(startSelPos, mousePos);
 		}
 
 		if (newSelectedUnits.Count != 0) {
 			GD.Print("new selected", newSelectedUnits.Count);
-			for (int indx = 0; indx < SelectedUnits.Count; indx++) {
-				SelectedUnits[indx].Deselect();
+			for (int indx = 0; indx < selectedUnits.Count; indx++) {
+				selectedUnits[indx].Deselect();
 			}
 			for (int indx = 0; indx < newSelectedUnits.Count; indx++) {
 				newSelectedUnits[indx].Select();
 			}
 
-			SelectedUnits = newSelectedUnits;
+			selectedUnits = newSelectedUnits;
 
 		} else {
-			DeselectSelected();
+			DeselectSelectedUnits();
 		}
+		if (newSelectedBuildings.Count != 0) {
+			GD.Print("new selected", newSelectedBuildings.Count);
+			for (int indx = 0; indx < newSelectedBuildings.Count; indx++) {
+				newSelectedBuildings[indx].Deselect();
+			}
+			for (int indx = 0; indx < newSelectedBuildings.Count; indx++) {
+				newSelectedBuildings[indx].Select();
+			}
+
+			selectedBuildings = newSelectedBuildings;
+
+		} else {
+			DeselectSelectedBuildings();
+		}
+
 	}
 
-	private Unit GetUnitUnderMouse(Vector2 mousePos) {
+	private ISelectable GetUnitObjMouse(Vector2 mousePos) {
 		var result = RayCastFromMouse(mousePos, 3);
 		if (result == null) {
 			return null;
 		}
-		if (result["collider"] is Unit collider) {
+		if (result["collider"] is ISelectable collider) {
 			return collider;
 		} else {
 			return null;
 		}
 	}
 	//select units inside the Box
-	private Godot.Collections.Array<Unit> GetUnits(Vector2 topLeft, Vector2 botRight) {
+	private (Godot.Collections.Array<Unit>, Godot.Collections.Array<Building>) GetObjs(Vector2 topLeft, Vector2 botRight) {
 
 		
 		if (topLeft.x > botRight.x) {
@@ -154,23 +181,36 @@ public class Cam : Spatial
 			botRight.y = temp;
 		}
 		var rect = new Rect2(topLeft, botRight - topLeft);
-		Godot.Collections.Array<Unit> SelectedUnits = new Godot.Collections.Array<Unit>();
+		Godot.Collections.Array<Unit> selectedUnits = new Godot.Collections.Array<Unit>();
+		Godot.Collections.Array<Building> selectedBuildings = new Godot.Collections.Array<Building>();
 
-			var unit_list = GetTree().GetNodesInGroup("Unit");
-			foreach (var node in unit_list) {
+		var unit_list = GetTree().GetNodesInGroup("Unit");
+		foreach (var node in unit_list) {
 					//var soldier = soldier_list[indx] as Unit;
 			if (node is Unit unit) {
 				if (unit._Faction == controlling_faction) {
 							if (rect.HasPoint(camera.UnprojectPosition(unit.GlobalTransform.origin))) {
-						SelectedUnits.Add(unit);
+						selectedUnits.Add(unit);
 					}
 				}
 			} else {
 				GD.PushWarning($"node {node.ToString()} is not of type Unit or is null");
 			}
 		}
-
-		return SelectedUnits;
+		var building_list = GetTree().GetNodesInGroup("Building");
+		foreach (var node in building_list) {
+					//var soldier = soldier_list[indx] as Unit;
+			if (node is Building building) {
+				if (building._Faction == controlling_faction) {
+							if (rect.HasPoint(camera.UnprojectPosition(building.GlobalTransform.origin))) {
+						selectedBuildings.Add(building);
+					}
+				}
+			} else {
+				GD.PushWarning($"node {node.ToString()} is not of type Unit or is null");
+			}
+		}
+		return (selectedUnits, selectedBuildings);
 	}
 
 	private Godot.Collections.Dictionary RayCastFromMouse(Vector2 mousePos, uint collisionMask) {
@@ -182,12 +222,22 @@ public class Cam : Spatial
 	}
 	// Called when the player wants to deselect current selected units 
 	// when click on the ground or selecting empty area.
-	private void DeselectSelected() {
-		if (SelectedUnits.Count != 0) {
-			foreach (var unit in SelectedUnits) {
+	private void DeselectSelectedUnits() {
+		if (selectedUnits.Count != 0) {
+			foreach (var unit in selectedUnits) {
 				unit.Deselect();
 			}
-			SelectedUnits.Clear();
+			selectedUnits.Clear();
+		}
+
+	}
+
+	private void DeselectSelectedBuildings() {
+		if (selectedBuildings.Count != 0) {
+			foreach (var building in selectedBuildings) {
+				building.Deselect();
+			}
+			selectedBuildings.Clear();
 		}
 	}
 
