@@ -107,7 +107,7 @@ public class Cam : Spatial
 		var newSelectedBuildings = new Godot.Collections.Array<Building>();
 
 		if (mousePos.DistanceSquaredTo(startSelPos) < 16) {
-			var u = GetUnitObjMouse(mousePos);
+			var u = GetObjMouse(mousePos);
 			
 			if (u != null) {
 				if (u is Unit) {					
@@ -116,6 +116,7 @@ public class Cam : Spatial
 					newSelectedBuildings.Add(u as Building);
 				}
 			} else {
+				GD.PrintS(u);
 				DeselectSelectedUnits();
 				DeselectSelectedBuildings();
 			}
@@ -154,7 +155,7 @@ public class Cam : Spatial
 
 	}
 
-	private ISelectable GetUnitObjMouse(Vector2 mousePos) {
+	private ISelectable GetObjMouse(Vector2 mousePos) {
 		var result = RayCastFromMouse(mousePos, 3);
 		if (result == null) {
 			return null;
