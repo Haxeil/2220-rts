@@ -28,51 +28,67 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="C0R0" type="TextureButton" parent="BoxSelection"]
-margin_left = 80.1669
-margin_top = 84.8331
-margin_right = 114.167
-margin_bottom = 118.833
+[node name="HContainer" type="HBoxContainer" parent="BoxSelection"]
+margin_left = 80.1594
+margin_top = 84.6544
+margin_right = 217.0
+margin_bottom = 120.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="C0R0" type="TextureButton" parent="BoxSelection/HContainer"]
+margin_right = 34.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 34, 35 )
 expand = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="C0R1" type="TextureButton" parent="BoxSelection"]
-margin_left = 114.167
-margin_top = 84.8331
-margin_right = 148.167
-margin_bottom = 118.833
+[node name="C0R1" type="TextureButton" parent="BoxSelection/HContainer"]
+margin_left = 38.0
+margin_right = 72.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 34, 35 )
 expand = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="C0R2" type="TextureButton" parent="BoxSelection"]
-margin_left = 145.55
-margin_top = 84.8331
-margin_right = 179.55
-margin_bottom = 118.833
+[node name="C0R2" type="TextureButton" parent="BoxSelection/HContainer"]
+margin_left = 66.0
+margin_right = 100.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 34, 35 )
 expand = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="C0R3" type="TextureButton" parent="BoxSelection"]
-margin_left = 180.392
-margin_top = 84.8331
-margin_right = 214.392
-margin_bottom = 118.833
+[node name="C0R3" type="TextureButton" parent="BoxSelection/HContainer"]
+margin_left = 100.0
+margin_right = 134.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 34, 35 )
 expand = true
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="BoxSelection/C0R0" to="BoxSelection/C0R0" method="_on_C0R0_pressed"]
-[connection signal="pressed" from="BoxSelection/C0R1" to="BoxSelection/C0R1" method="_on_C0R1_pressed"]
-[connection signal="pressed" from="BoxSelection/C0R2" to="BoxSelection/C0R2" method="_on_C0R2_pressed"]
-[connection signal="pressed" from="BoxSelection/C0R3" to="BoxSelection/C0R3" method="_on_C0R3_pressed"]
+[connection signal="mouse_entered" from="BoxSelection/HContainer/C0R0" to="." method="_on_btn_mouse_entered"]
+[connection signal="mouse_exited" from="BoxSelection/HContainer/C0R0" to="." method="_on_btn_mouse_exited"]
+[connection signal="pressed" from="BoxSelection/HContainer/C0R0" to="BoxSelection/HContainer/C0R0" method="_on_C0R0_pressed"]
+[connection signal="mouse_entered" from="BoxSelection/HContainer/C0R1" to="." method="_on_btn_mouse_entered"]
+[connection signal="mouse_exited" from="BoxSelection/HContainer/C0R1" to="." method="_on_btn_mouse_exited"]
+[connection signal="pressed" from="BoxSelection/HContainer/C0R1" to="BoxSelection/HContainer/C0R1" method="_on_C0R1_pressed"]
+[connection signal="mouse_entered" from="BoxSelection/HContainer/C0R2" to="." method="_on_btn_mouse_entered"]
+[connection signal="mouse_exited" from="BoxSelection/HContainer/C0R2" to="." method="_on_btn_mouse_exited"]
+[connection signal="pressed" from="BoxSelection/HContainer/C0R2" to="BoxSelection/HContainer/C0R2" method="_on_C0R2_pressed"]
+[connection signal="mouse_entered" from="BoxSelection/HContainer/C0R3" to="." method="_on_btn_mouse_entered"]
+[connection signal="mouse_exited" from="BoxSelection/HContainer/C0R3" to="." method="_on_btn_mouse_exited"]
+[connection signal="pressed" from="BoxSelection/HContainer/C0R3" to="BoxSelection/HContainer/C0R3" method="_on_C0R3_pressed"]

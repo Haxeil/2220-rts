@@ -115,5 +115,6 @@ shape = SubResource( 7 )
 transform = Transform( 7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 38.6197 )
 
 [node name="HumanSoldier" parent="Navigation" instance=ExtResource( 5 )]
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.16064, 0 )
 
 [node name="MainPanel" parent="." instance=ExtResource( 6 )]

@@ -116,7 +116,6 @@ public class Cam : Spatial
 					newSelectedBuildings.Add(u as Building);
 				}
 			} else {
-				GD.PrintS(u);
 				DeselectSelectedUnits();
 				DeselectSelectedBuildings();
 			}
@@ -154,7 +153,7 @@ public class Cam : Spatial
 		}
 
 	}
-
+	// Obj could only be Unit or Building.
 	private ISelectable GetObjMouse(Vector2 mousePos) {
 		var result = RayCastFromMouse(mousePos, 3);
 		if (result == null) {
@@ -240,6 +239,7 @@ public class Cam : Spatial
 			}
 			selectedBuildings.Clear();
 		}
+		GetTree().CallGroup("MainPanel", "ClearPanel");
 	}
 
 	private void PointToDirection(Vector3 position) {
@@ -247,4 +247,12 @@ public class Cam : Spatial
 		this.GetParent().AddChild(positionArrow);
 		positionArrow.GlobalTranslate(new Vector3(position.x, 0, position.z));
 	}
+
+	
+	public void ToggleProcess(bool toggle){
+		SetProcess(toggle);
+	}
 }
+
+
+
